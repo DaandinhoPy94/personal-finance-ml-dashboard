@@ -18,7 +18,7 @@ st.markdown("*Intelligent insights into your spending patterns*")
 
 # Sidebar
 st.sidebar.header("Navigation")
-page = st.sidebar.selectbox("Choose a page", ["Upload Data", "Dashboard", "Analytics", "Settings"])
+page = st.sidebar.selectbox("Choose a page", ["Upload Data", "Dashboard", "Analytics", "Portfolio", "Settings"])
 
 if page == "Upload Data":
     st.header("📊 Data Upload")
@@ -272,29 +272,44 @@ elif page == "Analytics":
                     if categorized_transactions < 10:
                         st.warning("⚠️ Minimaal 10 complete transacties nodig voor training")
                     else:
-                        # Training section
-                        if st.button("🎓 Train ML Model", type="primary"):
-                            with st.spinner("🤖 AI aan het trainen..."):
-                                try:
-                                    # Train the model
-                                    results = st.session_state.categorizer.train(df)
-                                    
-                                    # Store results in session state
-                                    st.session_state.training_results = results
-                                    
-                                    st.success("✅ Model succesvol getraind!")
-                                    
-                                    # Show training results
-                                    col_acc, col_samples, col_cats = st.columns(3)
-                                    with col_acc:
-                                        st.metric("Accuracy", f"{results['accuracy']:.1%}")
-                                    with col_samples:
-                                        st.metric("Training Samples", results['training_samples'])
-                                    with col_cats:
-                                        st.metric("Categories", len(results['categories']))
-                                    
-                                except Exception as e:
-                                    st.error(f"❌ Training error: {str(e)}")
+                        # Show category distribution
+                        category_counts = df.dropna(subset=['description', 'category'])['category'].value_counts()
+                        
+                        st.write("**📊 Categorie Verdeling:**")
+                        for category, count in category_counts.items():
+                            emoji = "✅" if count >= 2 else "⚠️"
+                            st.write(f"{emoji} {category}: {count} transacties")
+                        
+                        # Check if we have enough categories with sufficient data
+                        valid_categories = category_counts[category_counts >= 2]
+                        
+                        if len(valid_categories) < 2:
+                            st.error("❌ Minimaal 2 categorieën met elk minimaal 2 transacties nodig voor ML training")
+                            st.info("💡 Tip: Voeg meer sample data toe of combineer kleine categorieën")
+                        else:
+                            # Training section
+                            if st.button("🎓 Train ML Model", type="primary"):
+                                with st.spinner("🤖 AI aan het trainen..."):
+                                    try:
+                                        # Train the model
+                                        results = st.session_state.categorizer.train(df)
+                                        
+                                        # Store results in session state
+                                        st.session_state.training_results = results
+                                        
+                                        st.success("✅ Model succesvol getraind!")
+                                        
+                                        # Show training results
+                                        col_acc, col_samples, col_cats = st.columns(3)
+                                        with col_acc:
+                                            st.metric("Accuracy", f"{results['accuracy']:.1%}")
+                                        with col_samples:
+                                            st.metric("Training Samples", results['training_samples'])
+                                        with col_cats:
+                                            st.metric("Categories", len(results['categories']))
+                                        
+                                    except Exception as e:
+                                        st.error(f"❌ Training error: {str(e)}")
             
             with col2:
                 # Model status
@@ -436,9 +451,396 @@ elif page == "Analytics":
             else:
                 st.info("📈 Train eerst een model om insights te zien.")
 
-elif page == "Settings":
-    st.header("⚙️ Settings")
-    st.info("🚧 Settings will be added in later phases")
+elif page == "Portfolio":
+    st.header("💼 Crypto Portfolio Tracker")
+    
+    # Import our API modules
+    from src.api_integrations import CryptoDataFetcher, PortfolioTracker
+    
+    # Initialize objects in session state
+    if 'crypto_fetcher' not in st.session_state:
+        st.session_state.crypto_fetcher = CryptoDataFetcher()
+    if 'portfolio_tracker' not in st.session_state:
+        st.session_state.portfolio_tracker = PortfolioTracker()
+    
+    # Create tabs for portfolio features
+    portfolio_tab1, portfolio_tab2, portfolio_tab3 = st.tabs(["🔴 Live Prices", "💼 My Portfolio", "📈 Market Analysis"])
+    
+    with portfolio_tab1:
+        st.subheader("🔴 Live Cryptocurrency Prices")
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            if st.button("🔄 Refresh Prices", type="primary"):
+                with st.spinner("📡 Fetching live prices..."):
+                    live_prices = st.session_state.crypto_fetcher.get_live_prices()
+                    st.session_state.live_crypto_prices = live_prices
+            
+            # Show live prices if available
+            if 'live_crypto_prices' in st.session_state:
+                prices = st.session_state.live_crypto_prices
+                
+                if prices:
+                    st.success(f"✅ Live prices updated: {datetime.now().strftime('%H:%M:%S')}")
+                    
+                    # Create price table
+                    price_data = []
+                    for coin_id, data in prices.items():
+                        price_data.append({
+                            'Cryptocurrency': data['name'],
+                            'Symbol': data['symbol'],
+                            'Price (EUR)': f"€{data['price_eur']:,.2f}",
+                            'Price (USD)': f"${data['price_usd']:,.2f}",
+                            '24h Change': f"{data['change_24h']:+.1f}%",
+                            'Market Cap (EUR)': f"€{data['market_cap_eur']:,.0f}",
+                            'Last Updated': data['last_updated'].strftime('%H:%M:%S')
+                        })
+                    
+                    price_df = pd.DataFrame(price_data)
+                    st.dataframe(price_df, use_container_width=True)
+                    
+                    # Highlight biggest movers
+                    st.subheader("📊 Biggest Movers (24h)")
+                    sorted_by_change = sorted(prices.items(), key=lambda x: abs(x[1]['change_24h']), reverse=True)
+                    
+                    col_up, col_down = st.columns(2)
+                    
+                    with col_up:
+                        st.write("**🟢 Top Gainers:**")
+                        gainers = [p for p in sorted_by_change if p[1]['change_24h'] > 0][:3]
+                        for coin_id, data in gainers:
+                            st.write(f"• {data['symbol']}: +{data['change_24h']:.1f}%")
+                    
+                    with col_down:
+                        st.write("**🔴 Top Losers:**")
+                        losers = [p for p in sorted_by_change if p[1]['change_24h'] < 0][:3]
+                        for coin_id, data in losers:
+                            st.write(f"• {data['symbol']}: {data['change_24h']:.1f}%")
+                
+                else:
+                    st.error("❌ Failed to fetch live prices. Check your internet connection.")
+            else:
+                st.info("👆 Click 'Refresh Prices' to get live cryptocurrency data!")
+        
+        with col2:
+            st.write("**📊 Market Overview:**")
+            st.write("Real-time cryptocurrency prices powered by CoinGecko API")
+            st.write("")
+            st.write("**Supported Cryptocurrencies:**")
+            supported = st.session_state.crypto_fetcher.supported_coins
+            for coin_id, symbol in supported.items():
+                st.write(f"• {symbol} - {coin_id.replace('-', ' ').title()}")
+    
+    with portfolio_tab2:
+        st.subheader("💼 My Crypto Portfolio")
+    
+        # Portfolio management interface
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
+            st.write("**➕ Add Holdings:**")
+            
+            # Initialize portfolio if not exists
+            if 'user_portfolio' not in st.session_state:
+                st.session_state.user_portfolio = {}
+            
+            # Coin selection dropdown
+            supported_coins = st.session_state.crypto_fetcher.supported_coins
+            coin_options = {f"{symbol} - {coin_id.replace('-', ' ').title()}": coin_id 
+                        for coin_id, symbol in supported_coins.items()}
+            
+            selected_coin_display = st.selectbox(
+                "Select Cryptocurrency:",
+                options=list(coin_options.keys()),
+                help="Choose which cryptocurrency to add to your portfolio"
+            )
+            
+            selected_coin = coin_options[selected_coin_display]
+            
+            # Amount input
+            amount = st.number_input(
+                f"Amount of {supported_coins[selected_coin]}:",
+                min_value=0.0,
+                value=0.0,
+                step=0.1,
+                format="%.4f",
+                help="Enter how much of this cryptocurrency you own"
+            )
+            
+            # Add to portfolio button
+            col_add, col_remove = st.columns(2)
+            
+            with col_add:
+                if st.button("➕ Add to Portfolio", type="primary"):
+                    if amount > 0:
+                        st.session_state.user_portfolio[selected_coin] = amount
+                        st.success(f"✅ Added {amount} {supported_coins[selected_coin]} to portfolio!")
+                    else:
+                        st.warning("⚠️ Please enter a valid amount > 0")
+            
+            with col_remove:
+                if st.button("🗑️ Remove from Portfolio"):
+                    if selected_coin in st.session_state.user_portfolio:
+                        removed_amount = st.session_state.user_portfolio.pop(selected_coin)
+                        st.success(f"✅ Removed {removed_amount} {supported_coins[selected_coin]} from portfolio!")
+                    else:
+                        st.warning("⚠️ This cryptocurrency is not in your portfolio")
+        
+        with col2:
+            st.write("**📊 Current Holdings:**")
+            
+            if st.session_state.user_portfolio:
+                # Display current holdings
+                holdings_data = []
+                for coin_id, amount in st.session_state.user_portfolio.items():
+                    symbol = supported_coins.get(coin_id, coin_id.upper())
+                    holdings_data.append({
+                        'Cryptocurrency': coin_id.replace('-', ' ').title(),
+                        'Symbol': symbol,
+                        'Amount': f"{amount:.4f}",
+                    })
+                
+                holdings_df = pd.DataFrame(holdings_data)
+                st.dataframe(holdings_df, use_container_width=True, hide_index=True)
+                
+                # Clear all button
+                if st.button("🗑️ Clear All Holdings", type="secondary"):
+                    st.session_state.user_portfolio = {}
+                    st.success("✅ All holdings cleared!")
+                    st.rerun()
+            else:
+                st.info("📝 No holdings yet. Add some cryptocurrencies to start tracking your portfolio!")
+        
+        # Portfolio valuation section
+        if st.session_state.user_portfolio:
+            st.divider()
+            st.subheader("💰 Portfolio Valuation")
+            
+            col1, col2, col3 = st.columns(3)
+            
+            with col2:
+                if st.button("🔄 Calculate Portfolio Value", type="primary"):
+                    with st.spinner("💹 Calculating portfolio value..."):
+                        # Set holdings in portfolio tracker
+                        st.session_state.portfolio_tracker.set_holdings(st.session_state.user_portfolio)
+                        
+                        # Calculate portfolio value
+                        portfolio_stats = st.session_state.portfolio_tracker.calculate_portfolio_value()
+                        st.session_state.portfolio_stats = portfolio_stats
+            
+            # Display portfolio statistics
+            if 'portfolio_stats' in st.session_state:
+                stats = st.session_state.portfolio_stats
+                
+                # Key metrics
+                st.write("**📈 Portfolio Summary:**")
+                
+                metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
+                
+                with metric_col1:
+                    st.metric(
+                        "Total Value (EUR)", 
+                        f"€{stats['total_value_eur']:,.2f}",
+                        help="Current market value of your entire portfolio in Euros"
+                    )
+                
+                with metric_col2:
+                    st.metric(
+                        "Total Value (USD)", 
+                        f"${stats['total_value_usd']:,.2f}",
+                        help="Current market value of your entire portfolio in US Dollars"
+                    )
+                
+                with metric_col3:
+                    change_24h = stats.get('total_change_24h', 0)
+                    delta_color = "normal" if change_24h >= 0 else "inverse"
+                    st.metric(
+                        "24h Change", 
+                        f"{change_24h:+.2f}%",
+                        delta=f"{change_24h:+.2f}%",
+                        help="Percentage change in your portfolio value over the last 24 hours"
+                    )
+                
+                with metric_col4:
+                    change_value = stats['total_value_eur'] * (change_24h / 100)
+                    st.metric(
+                        "24h Change (EUR)", 
+                        f"€{change_value:+,.2f}",
+                        delta=f"€{change_value:+,.2f}",
+                        help="Absolute change in your portfolio value over the last 24 hours"
+                    )
+                
+                # Detailed holdings breakdown
+                if stats.get('holdings_detail'):
+                    st.write("**📋 Detailed Holdings:**")
+                    
+                    detailed_data = []
+                    for holding in stats['holdings_detail']:
+                        detailed_data.append({
+                            'Coin': holding['coin'],
+                            'Symbol': holding['symbol'],
+                            'Amount': f"{holding['amount']:.4f}",
+                            'Price (EUR)': f"€{holding['price_eur']:,.2f}",
+                            'Value (EUR)': f"€{holding['value_eur']:,.2f}",
+                            '24h Change': f"{holding['change_24h']:+.1f}%",
+                            '24h Value Change': f"€{holding['change_value_eur']:+,.2f}"
+                        })
+                    
+                    detailed_df = pd.DataFrame(detailed_data)
+                    st.dataframe(detailed_df, use_container_width=True, hide_index=True)
+                    
+                    # Portfolio composition chart
+                    st.write("**🥧 Portfolio Composition:**")
+                    
+                    # Create pie chart data
+                    pie_data = []
+                    for holding in stats['holdings_detail']:
+                        pie_data.append({
+                            'Cryptocurrency': holding['symbol'],
+                            'Value': holding['value_eur'],
+                            'Percentage': (holding['value_eur'] / stats['total_value_eur']) * 100
+                        })
+                    
+                    pie_df = pd.DataFrame(pie_data)
+                    
+                    # Create plotly pie chart
+                    import plotly.express as px
+                    
+                    fig_pie = px.pie(
+                        pie_df, 
+                        values='Value', 
+                        names='Cryptocurrency',
+                        title="Portfolio Distribution by Value (EUR)",
+                        hover_data=['Percentage'],
+                        labels={'Value': 'Value (EUR)', 'Percentage': 'Percentage (%)'}
+                    )
+                    
+                    fig_pie.update_traces(
+                        textposition='inside', 
+                        textinfo='percent+label',
+                        hovertemplate='<b>%{label}</b><br>' +
+                                    'Value: €%{value:,.2f}<br>' +
+                                    'Percentage: %{percent}<br>' +
+                                    '<extra></extra>'
+                    )
+                    
+                    st.plotly_chart(fig_pie, use_container_width=True)
+                    
+                    # Portfolio performance insights
+                    st.write("**💡 Portfolio Insights:**")
+                    
+                    insights_col1, insights_col2 = st.columns(2)
+                    
+                    with insights_col1:
+                        # Best performing coin
+                        best_performer = max(stats['holdings_detail'], key=lambda x: x['change_24h'])
+                        st.success(f"🏆 **Best Performer (24h):** {best_performer['symbol']} (+{best_performer['change_24h']:.1f}%)")
+                        
+                        # Largest holding by value
+                        largest_holding = max(stats['holdings_detail'], key=lambda x: x['value_eur'])
+                        largest_pct = (largest_holding['value_eur'] / stats['total_value_eur']) * 100
+                        st.info(f"📊 **Largest Position:** {largest_holding['symbol']} ({largest_pct:.1f}% of portfolio)")
+                    
+                    with insights_col2:
+                        # Worst performing coin
+                        worst_performer = min(stats['holdings_detail'], key=lambda x: x['change_24h'])
+                        st.error(f"📉 **Worst Performer (24h):** {worst_performer['symbol']} ({worst_performer['change_24h']:.1f}%)")
+                        
+                        # Diversification insight
+                        num_holdings = len(stats['holdings_detail'])
+                        avg_allocation = 100 / num_holdings
+                        st.info(f"🎯 **Diversification:** {num_holdings} coins (avg {avg_allocation:.1f}% each)")
+                    
+                    # Update timestamp
+                    st.caption(f"📅 Last updated: {stats['last_updated'].strftime('%Y-%m-%d %H:%M:%S')}")
+
+                    # Email alerts section
+                    st.divider()
+                    st.subheader("📧 Email Alert Configuration")
+
+                    # Import email system
+                    from src.email_alerts import PortfolioAlertSystem
+
+                    # Initialize in session state
+                    if 'alert_system' not in st.session_state:
+                        st.session_state.alert_system = PortfolioAlertSystem()
+
+                    alert_col1, alert_col2 = st.columns(2)
+
+                    with alert_col1:
+                        st.write("**Email Setup:**")
+                    
+                    sender_email = st.text_input(
+                        "Gmail Address:", 
+                        placeholder="your.email@gmail.com",
+                        help="Your Gmail address for sending alerts"
+                    )
+                    
+                    sender_password = st.text_input(
+                        "Gmail App Password:", 
+                        type="password",
+                        placeholder="Enter your Gmail app password",
+                        help="Generate an app password in Gmail settings → Security → 2FA → App passwords"
+                    )
+                    
+                    recipient_email = st.text_input(
+                        "Alert Recipient:", 
+                        placeholder="alerts@yourdomain.com",
+                        value=sender_email,
+                        help="Where to send portfolio alerts (can be same as sender)"
+                    )
+
+                    with alert_col2:
+                        st.write("**Alert Settings:**")
+                    
+                    if sender_email and sender_password and recipient_email:
+                        # Configure email system
+                        st.session_state.alert_system.setup_email_config(
+                            sender_email, sender_password, recipient_email
+                        )
+                        
+                        # Test email button
+                        if st.button("📧 Send Test Email", type="secondary"):
+                            with st.spinner("Sending test email..."):
+                                success = st.session_state.alert_system.test_email_setup()
+                                if success:
+                                    st.success("✅ Test email sent! Check your inbox.")
+                                else:
+                                    st.error("❌ Email test failed. Check your settings.")
+                        
+                        # Simulate portfolio alert button  
+                        if st.button("🚨 Simulate Portfolio Alert", type="secondary"):
+                            # Create fake alert data for demonstration
+                            fake_alert = {
+                                'should_alert': True,
+                                'change_pct': 15.7,
+                                'change_eur': 2450.00,
+                                'current_value': 18000.00,
+                                'previous_value': 15550.00,
+                                'alert_type': 'major',
+                                'urgency': 'MEDIUM'
+                            }
+                            
+                            with st.spinner("Sending portfolio alert..."):
+                                success = st.session_state.alert_system.send_portfolio_alert(
+                                    fake_alert, stats
+                                )
+                                if success:
+                                    st.success("✅ Portfolio alert sent! Check your email for the detailed report.")
+                                else:
+                                    st.error("❌ Alert sending failed. Check your email settings.")
+                    else:
+                        st.info("💡 Fill in email settings to enable alerts")
+                        st.write("**How to get Gmail App Password:**")
+                        st.write("1. Go to Google Account Settings")
+                        st.write("2. Security → 2-Step Verification (enable if not done)")
+                        st.write("3. App passwords → Generate password")
+                        st.write("4. Use the generated password (not your regular password)")
+                        
+                    with portfolio_tab3:
+                        st.subheader("📈 Market Analysis")
+                        st.info("🚧 Technical analysis charts coming soon!")
 
 # Footer
 st.markdown("---")

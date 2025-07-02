@@ -53,12 +53,13 @@ class TransactionCategorizer:
         
         return text
     
-    def prepare_training_data(self, df):
+    def prepare_training_data(self, df, min_samples_per_category=2):
         """
         Bereidt data voor voor ML training
         
         Args:
             df (DataFrame): Transactie data met 'description' en 'category'
+            min_samples_per_category (int): Minimum aantal samples per categorie
             
         Returns:
             tuple: (X, y) voor training
@@ -76,11 +77,34 @@ class TransactionCategorizer:
         # Remove empty descriptions
         df_clean = df_clean[df_clean['description_clean'] != ""]
         
-        # Store unique categories
-        self.categories = sorted(df_clean['category'].unique())
+        # Count samples per category
+        category_counts = df_clean['category'].value_counts()
         
-        X = df_clean['description_clean'].values
-        y = df_clean['category'].values
+        # Filter out categories with too few samples
+        valid_categories = category_counts[category_counts >= min_samples_per_category].index
+        
+        if len(valid_categories) == 0:
+            raise ValueError(f"Geen categorieën hebben minimaal {min_samples_per_category} samples!")
+        
+        # Filter data to only include valid categories
+        df_filtered = df_clean[df_clean['category'].isin(valid_categories)]
+        
+        # Report filtering results
+        total_categories = len(category_counts)
+        filtered_categories = len(valid_categories)
+        removed_categories = category_counts[category_counts < min_samples_per_category]
+        
+        print(f"📊 Categorie filtering:")
+        print(f"   Totaal categorieën: {total_categories}")
+        print(f"   Bruikbare categorieën: {filtered_categories}")
+        if len(removed_categories) > 0:
+            print(f"   Weggelaten (te weinig data): {list(removed_categories.index)}")
+        
+        # Store only valid categories
+        self.categories = sorted(df_filtered['category'].unique())
+        
+        X = df_filtered['description_clean'].values
+        y = df_filtered['category'].values
         
         return X, y
     
@@ -99,7 +123,7 @@ class TransactionCategorizer:
         print("🤖 Starting model training...")
         
         # Prepare data
-        X, y = self.prepare_training_data(df)
+        X, y = self.prepare_training_data(df, min_samples_per_category=2)
         
         if len(X) < 10:
             raise ValueError("Niet genoeg data voor training (minimum 10 samples)")
