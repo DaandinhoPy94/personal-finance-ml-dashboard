@@ -11,3 +11,8 @@ matplotlib>=3.7.0
 seaborn>=0.12.0
 openpyxl>=3.1.0
 requests>=2.31.0
+
+# ML specific packages
+nltk>=3.8.0
+joblib>=1.3.0
+textblob>=0.17.0
