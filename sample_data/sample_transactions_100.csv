@@ -1,0 +1,101 @@
+date,amount,description,category,subcategory,payment_method,location,tags
+2024-01-15,-12.5,Albert Heijn groceries,Food,Groceries,Card,Amsterdam,weekly_shopping
+2024-01-15,-3.2,Coffee Company,Food,Coffee,Card,Amsterdam,
+2024-01-16,-45.0,Restaurant De Kas,Food,Dining_Out,Card,Amsterdam,date_night
+2024-01-16,-2.9,GVB dagkaart,Transport,Public_Transport,Card,Amsterdam,
+2024-01-17,-89.99,Netflix subscription,Entertainment,Streaming,Card,,monthly_subscription
+2024-01-17,-15.75,Etos personal care,Health,Personal_Care,Card,Amsterdam,
+2024-01-18,-67.5,Shell tankstation,Transport,Fuel,Card,A1,
+2024-01-18,-8.9,Lunch at work,Food,Lunch,Card,Office,
+2024-01-19,2500.0,Salary deposit,Income,Salary,Bank_Transfer,,monthly_income
+2024-01-19,-950.0,Rent payment,Housing,Rent,Bank_Transfer,,monthly_fixed
+2024-01-20,-125.0,Ziggo internet,Utilities,Internet,Bank_Transfer,,monthly_fixed
+2024-01-20,-23.45,Jumbo groceries,Food,Groceries,Card,Amsterdam,weekend_shopping
+2024-01-21,-15.0,Cinema ticket,Entertainment,Movies,Card,Amsterdam,weekend_fun
+2024-01-22,-4.5,Coffee at cafe,Food,Coffee,Card,Amsterdam,
+2024-01-22,-78.9,Bol.com books,Education,Books,Card,,self_development
+2024-07-02,3087.51,Annual Bonus,Income,Bonus,Card,Eindhoven,subscription
+2025-03-05,-173.58,Dirk,Food,Groceries,Direct_Debit,Eindhoven,
+2025-05-10,-148.72,T-Mobile,Utilities,Phone,Direct_Debit,Utrecht,gift
+2024-12-13,-84.62,Rent Payment,Housing,Rent,Card,Groningen,
+2024-03-24,-244.06,Vattenfall,Utilities,Electricity,Card,Den Haag,monthly_subscription
+2025-02-26,-277.23,Ziggo,Utilities,Internet,Bank_Transfer,Eindhoven,
+2024-10-21,-213.7,Mortgage Payment,Housing,Mortgage,Direct_Debit,Rotterdam,
+2024-12-08,-256.74,AFAS Live,Entertainment,Concerts,Card,Eindhoven,impulse_buy
+2025-04-20,-249.57,AFAS Live,Entertainment,Concerts,Cash,Rotterdam,travel
+2024-09-04,-214.09,KPN,Utilities,Internet,Cash,Amsterdam,weekly_shopping
+2024-10-24,-62.3,Pathe,Entertainment,Movies,Cash,Den Haag,self_development
+2024-04-19,-294.73,VondelGym,Health,Gym,Card,Groningen,salary
+2024-01-24,-136.39,Restaurant Breda,Food,Dining_Out,Cash,Groningen,weekly_shopping
+2024-01-29,-1.17,Rent Payment,Housing,Rent,Direct_Debit,Amsterdam,self_development
+2025-01-22,-3.0,Hema Lunch,Food,Lunch,Direct_Debit,Rotterdam,impulse_buy
+2024-12-16,-206.14,Ziggo Dome,Entertainment,Concerts,Bank_Transfer,Groningen,date_night
+2025-03-25,-51.96,Udemy,Education,Courses,Card,Rotterdam,weekly_shopping
+2024-06-29,-261.86,Restaurant Breda,Food,Dining_Out,Cash,Rotterdam,
+2024-09-09,-168.57,AFAS Live,Entertainment,Concerts,Direct_Debit,Den Haag,daily_coffee
+2024-07-22,-126.22,Uber,Transport,Taxi,Bank_Transfer,Den Haag,date_night
+2024-08-08,-239.61,Waternet,Utilities,Water,Bank_Transfer,Rotterdam,self_development
+2025-01-06,-98.65,Donkey Republic,Transport,Bike_Rental,Cash,Groningen,
+2024-08-10,-16.12,Amazon Books,Education,Books,Direct_Debit,Den Haag,subscription
+2024-10-31,4065.05,Tax Refund,Income,Refund,Card,Eindhoven,travel
+2024-05-05,-54.4,University Fees,Education,Tuition,Cash,Groningen,date_night
+2024-11-10,-255.34,Service Pharmacy,Health,Pharmacy,Direct_Debit,Utrecht,monthly_income
+2025-01-24,-168.6,Rent Payment,Housing,Rent,Direct_Debit,Amsterdam,
+2025-04-06,-131.16,Coursera,Education,Courses,Direct_Debit,Groningen,monthly_subscription
+2024-10-24,-123.46,Amazon Books,Education,Books,Cash,Rotterdam,weekend_shopping
+2024-08-16,-37.41,Eneco,Utilities,Gas,Direct_Debit,Utrecht,date_night
+2024-02-24,-125.76,Broodje Mario,Food,Lunch,Direct_Debit,Eindhoven,
+2024-04-04,-263.06,Huisarts,Health,Doctor,Direct_Debit,Den Haag,monthly_fixed
+2024-10-14,-46.4,Udemy,Education,Courses,Cash,Utrecht,weekly_shopping
+2024-09-03,-287.32,Basic-Fit,Health,Gym,Card,Eindhoven,self_development
+2025-04-27,-90.38,FEBO,Food,Snacks,Direct_Debit,Rotterdam,
+2025-05-20,-242.01,Shell,Transport,Fuel,Direct_Debit,Amsterdam,
+2025-05-10,-70.52,Mortgage Payment,Housing,Mortgage,Cash,Utrecht,
+2024-01-05,-173.26,McDonalds,Food,Snacks,Direct_Debit,Eindhoven,
+2024-06-13,-207.81,VondelGym,Health,Gym,Cash,Utrecht,bonus
+2024-04-28,-188.01,Coursera,Education,Courses,Card,Amsterdam,monthly_subscription
+2024-06-06,-248.55,Netflix,Entertainment,Streaming,Cash,Utrecht,subscription
+2025-03-28,-233.07,Douglas,Health,Personal_Care,Bank_Transfer,Eindhoven,salary
+2025-06-19,4140.82,Tax Refund,Income,Refund,Direct_Debit,Eindhoven,
+2024-09-02,-129.95,Mortgage Payment,Housing,Mortgage,Direct_Debit,Utrecht,bonus
+2025-03-24,-5.61,Rent Payment,Housing,Rent,Direct_Debit,Groningen,weekend_shopping
+2024-02-28,3193.8,Annual Bonus,Income,Bonus,Bank_Transfer,Utrecht,weekend_fun
+2024-02-20,-114.79,Basic-Fit,Health,Gym,Cash,Rotterdam,daily_coffee
+2024-04-18,-20.83,Texaco,Transport,Fuel,Bank_Transfer,Rotterdam,
+2024-01-21,2723.13,Tax Refund,Income,Refund,Direct_Debit,Utrecht,monthly_fixed
+2024-11-19,-192.09,AFAS Live,Entertainment,Concerts,Cash,Eindhoven,monthly_income
+2024-02-21,4876.07,Monthly Salary,Income,Salary,Cash,Eindhoven,
+2025-04-02,-159.04,Uber,Transport,Taxi,Cash,Groningen,subscription
+2025-03-10,-210.64,Restaurant Breda,Food,Dining_Out,Cash,Amsterdam,self_development
+2024-09-30,-39.29,Eneco,Utilities,Gas,Bank_Transfer,Den Haag,
+2024-12-22,3151.5,Dividends,Income,Investment_Income,Cash,Den Haag,monthly_fixed
+2024-05-08,-192.46,Huisarts,Health,Doctor,Bank_Transfer,Amsterdam,gift
+2024-06-06,-126.21,McDonalds,Food,Snacks,Bank_Transfer,Rotterdam,
+2024-12-24,-199.84,PlayStation Store,Entertainment,Games,Direct_Debit,Eindhoven,monthly_income
+2025-05-09,-272.78,Greenchoice,Utilities,Electricity,Cash,Utrecht,gift
+2024-08-04,-231.06,Waternet,Utilities,Water,Card,Utrecht,weekend_fun
+2024-03-18,-182.48,Vodafone,Utilities,Phone,Card,Utrecht,monthly_fixed
+2024-04-19,-286.98,Ziggo,Utilities,Internet,Direct_Debit,Eindhoven,gift
+2024-07-08,-64.15,Shell,Transport,Fuel,Bank_Transfer,Amsterdam,self_development
+2024-12-12,-232.03,Eneco,Utilities,Gas,Card,Amsterdam,travel
+2024-01-16,-232.48,Taxi Centrale,Transport,Taxi,Card,Amsterdam,travel
+2024-08-02,1022.34,Annual Bonus,Income,Bonus,Card,Groningen,weekend_shopping
+2025-01-14,-71.15,Ziggo,Utilities,Internet,Cash,Eindhoven,weekend_shopping
+2025-05-06,-79.87,Ziggo,Utilities,Internet,Card,Utrecht,
+2025-05-02,-16.1,Starbucks,Food,Coffee,Cash,Den Haag,bonus
+2024-08-20,-291.47,PlayStation Store,Entertainment,Games,Card,Utrecht,
+2025-02-12,-79.34,Apotheek,Health,Pharmacy,Bank_Transfer,Eindhoven,daily_coffee
+2024-04-23,-101.48,Albert Heijn,Food,Groceries,Card,Groningen,weekly_shopping
+2025-06-16,-75.2,Etos,Health,Personal_Care,Direct_Debit,Amsterdam,travel
+2024-04-10,4748.19,Annual Bonus,Income,Bonus,Cash,Den Haag,travel
+2024-07-25,-60.45,Mortgage Payment,Housing,Mortgage,Direct_Debit,Amsterdam,weekly_shopping
+2025-02-24,-125.03,Waternet,Utilities,Water,Cash,Rotterdam,monthly_fixed
+2025-01-05,-26.67,Mortgage Payment,Housing,Mortgage,Cash,Rotterdam,self_development
+2024-03-05,-89.08,Mortgage Payment,Housing,Mortgage,Card,Den Haag,
+2024-10-11,-148.11,Mortgage Payment,Housing,Mortgage,Card,Eindhoven,
+2024-08-02,-247.05,Mortgage Payment,Housing,Mortgage,Bank_Transfer,Groningen,salary
+2024-06-26,-90.98,Mortgage Payment,Housing,Mortgage,Card,Eindhoven,
+2024-10-12,-99.31,Smullers,Food,Snacks,Direct_Debit,Eindhoven,
+2024-06-24,-235.83,Bol.com,Education,Books,Bank_Transfer,Rotterdam,travel
+2025-06-28,-111.47,Amazon Books,Education,Books,Bank_Transfer,Den Haag,subscription
+2025-03-06,-62.08,BP,Transport,Fuel,Card,Utrecht,

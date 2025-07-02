@@ -1,0 +1,16 @@
+date,amount,description,category,subcategory,payment_method,location,tags
+2024-01-15,-12.50,Albert Heijn groceries,Food,Groceries,Card,Amsterdam,weekly_shopping
+2024-01-15,-3.20,Coffee Company,Food,Coffee,Card,Amsterdam,
+2024-01-16,-45.00,Restaurant De Kas,Food,Dining_Out,Card,Amsterdam,date_night
+2024-01-16,-2.90,GVB dagkaart,Transport,Public_Transport,Card,Amsterdam,
+2024-01-17,-89.99,Netflix subscription,Entertainment,Streaming,Card,,monthly_subscription
+2024-01-17,-15.75,Etos personal care,Health,Personal_Care,Card,Amsterdam,
+2024-01-18,-67.50,Shell tankstation,Transport,Fuel,Card,A1,
+2024-01-18,-8.90,Lunch at work,Food,Lunch,Card,Office,
+2024-01-19,2500.00,Salary deposit,Income,Salary,Bank_Transfer,,monthly_income
+2024-01-19,-950.00,Rent payment,Housing,Rent,Bank_Transfer,,monthly_fixed
+2024-01-20,-125.00,Ziggo internet,Utilities,Internet,Bank_Transfer,,monthly_fixed
+2024-01-20,-23.45,Jumbo groceries,Food,Groceries,Card,Amsterdam,weekend_shopping
+2024-01-21,-15.00,Cinema ticket,Entertainment,Movies,Card,Amsterdam,weekend_fun
+2024-01-22,-4.50,Coffee at cafe,Food,Coffee,Card,Amsterdam,
+2024-01-22,-78.90,Bol.com books,Education,Books,Card,,self_development
